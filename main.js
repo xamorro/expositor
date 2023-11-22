@@ -167,5 +167,34 @@ function ImportGLTF(path, object3d, position, scale){
   //     camera.aspect()
 
   // })
+
+  
+
+  const raycaster = new THREE.Raycaster()
+  const rayOrigin = new THREE.Vector3(-43, 10, 30)
+  const rayDirection = new THREE.Vector3(10, 0, 0)
+  rayDirection.normalize()
+  raycaster.set(rayOrigin, rayDirection)
+
+  const arrowHelper = new THREE.ArrowHelper( rayDirection, rayOrigin, 200);
+  scene.add( arrowHelper)
+
+  const geometry = new THREE.SphereGeometry( 5, 32, 16 ); 
+  const material = new THREE.MeshBasicMaterial( { color: 0xf00650 } ); 
+  const sphere = new THREE.Mesh( geometry, material ); 
+  sphere.position.set(-10, 10, 30);
+  scene.add( sphere );
+
+  const sphere2 = new THREE.Mesh( geometry, material ); 
+  sphere2.position.set(10, 10, 30);
+  scene.add( sphere2 );
+
+  const sphere3 = new THREE.Mesh( geometry, material ); 
+  sphere3.position.set(30, 10, 30);
+  scene.add( sphere3 );
+
+
+  
+
 }
 
