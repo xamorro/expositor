@@ -10,38 +10,42 @@ let loader = null
 const scene = new THREE.Scene()
 
 const fov = 60;
-const aspect = window.innerWidth/window.innerHeight;  
+const aspect = window.innerWidth/window.innerHeight;
 const near = 0.1;
 const far = 1000;
 
-//----------------------------------------------------------------
-const points = [
-  {
-  position: new THREE.Vector3(1.55, 0.3, - 0.6),
-  element: document.querySelector('.point-0')
-  }
-  ]
-
-  const tick = () => {
-    // Update controls
-    controls.update()
-    // Recorrer cada punt de l’array points
-    for(const point of points) {
-      const screenPosition = point.position.clone()
-      screenPosition.project(camera)
-      const translateX = screenPosition.x * sizes.width * 0.5
-      const translateY = - screenPosition.y * sizes.height * 0.5
-      point.element.style.transform = `translateX(${translateX}px)
-      translateY(${translateY}px)`
-      }
-    // ...
-    }
-
-//----------------------------------------------------------------
+//--------------------------------HTML,JAVA,CSS--------------------------------
 
 
 
+//--------------------------------RAYCAST--------------------------------
 
+
+const raycaster = new THREE.Raycaster()
+const rayOrigin = new THREE.Vector3(-43, 10, 30)
+const rayDirection = new THREE.Vector3(10, 0, 0)
+rayDirection.normalize()
+
+raycaster.set(rayOrigin, rayDirection)
+
+const arrowHelper = new THREE.ArrowHelper( rayDirection, rayOrigin, 200);
+scene.add( arrowHelper)
+
+const geometry = new THREE.SphereGeometry( 5, 32, 16 );
+const material = new THREE.MeshStandardMaterial( { color: 0xf00650 } );
+const sphere = new THREE.Mesh( geometry, material );
+sphere.position.set(-10, 10, 30);
+scene.add( sphere );
+
+const sphere2 = new THREE.Mesh( geometry, material );
+sphere2.position.set(10, 10, 30);
+scene.add( sphere2 );
+
+const sphere3 = new THREE.Mesh( geometry, material );
+sphere3.position.set(30, 10, 30);
+scene.add( sphere3 );
+
+const clock = new THREE.Clock()
 
 
 //---------------------CAMERA CONTROL----------------------
@@ -90,12 +94,12 @@ scene.background = environmentMap
   light.shadow.mapSize.height = 1024
   //Desenfocam un poc
   light.shadow.radius = 10
-  
+
 }
 
 // array d’objectes dels quals hem d’actualitzar la rotació.
 const objects = [];
- 
+
 
   //plane
   const planeGeo = new THREE.PlaneGeometry(400, 400)
@@ -118,19 +122,28 @@ ImportGLTF("Models/pipe_organ_espresso_machine.glb",organ,new THREE.Vector3(60, 
 let violin = null;
 ImportGLTF("Models/stylized_violin.glb",violin,new THREE.Vector3(30, 3.5, 0),new THREE.Vector3(30,30,30));
 
-//cridam sa funcio gir q mos rota i renderiza
-gir();
+//cridam sa funcio tick q mos renderiza
+tick();
 
 //Per a cada objecte de s'array mouli sa Y cada x temps
-function gir (time) {
+function tick (time) {
   time *= 0.001;
-  objects.forEach((obj) => {
-  obj.rotation.y = time;
-  }); 
- 
+
+  const elapsedTime = clock.getElapsedTime()
+  // Anima objectes abaix cap a dalt
+  sphere.position.y = Math.sin(elapsedTime * 4.3) * 5.5 + 15
+  sphere2.position.y = Math.sin(elapsedTime * 0.8) * 5.5 + 15
+  sphere3.position.y = Math.sin(elapsedTime * 1.4) * 1.5 + 15
+
+  //Feim q es raycast interectiu amb 1 sol objecte o varis
+  const intersect = raycaster.intersectObject(sphere2)
+  console.log(intersect)
+  // const intersects = raycaster.intersectObjects([sphere, sphere2, sphere3])
+  // console.log(intersects)
+
   
   renderer.render(scene,camera)
-  requestAnimationFrame(gir)
+  requestAnimationFrame(tick)
 }
 
 
@@ -162,39 +175,14 @@ function ImportGLTF(path, object3d, position, scale){
       }
   );
 
-  // window.addEventListener('resize',() =>{
-  //     renderer.setSize(window.innerWidth, window.innerHeight)
-  //     camera.aspect()
-
-  // })
-
-  
-
-  const raycaster = new THREE.Raycaster()
-  const rayOrigin = new THREE.Vector3(-43, 10, 30)
-  const rayDirection = new THREE.Vector3(10, 0, 0)
-  rayDirection.normalize()
-  raycaster.set(rayOrigin, rayDirection)
-
-  const arrowHelper = new THREE.ArrowHelper( rayDirection, rayOrigin, 200);
-  scene.add( arrowHelper)
-
-  const geometry = new THREE.SphereGeometry( 5, 32, 16 ); 
-  const material = new THREE.MeshBasicMaterial( { color: 0xf00650 } ); 
-  const sphere = new THREE.Mesh( geometry, material ); 
-  sphere.position.set(-10, 10, 30);
-  scene.add( sphere );
-
-  const sphere2 = new THREE.Mesh( geometry, material ); 
-  sphere2.position.set(10, 10, 30);
-  scene.add( sphere2 );
-
-  const sphere3 = new THREE.Mesh( geometry, material ); 
-  sphere3.position.set(30, 10, 30);
-  scene.add( sphere3 );
 
 
-  
+
+
+
+
+
+
 
 }
 
