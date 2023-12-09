@@ -24,9 +24,18 @@ const far = 1000;
 const raycaster = new THREE.Raycaster()
 const rayOrigin = new THREE.Vector3(-43, 10, 30)
 const rayDirection = new THREE.Vector3(10, 0, 0)
-rayDirection.normalize()
 
-raycaster.set(rayOrigin, rayDirection)
+
+//RATOLI RAYCAST
+const mouse = new THREE.Vector2()
+window.addEventListener('mousemove', (event) =>{
+  mouse.x = (event.clientX / sizes.width) * 2 - 1;
+  mouse.y = - (event.clientY / sizes.height) * 2 + 1;
+  console.log(mouse)
+})
+
+
+
 
 const arrowHelper = new THREE.ArrowHelper( rayDirection, rayOrigin, 200);
 scene.add( arrowHelper)
@@ -135,11 +144,32 @@ function tick (time) {
   sphere2.position.y = Math.sin(elapsedTime * 0.8) * 5.5 + 15
   sphere3.position.y = Math.sin(elapsedTime * 1.4) * 1.5 + 15
 
-  //Feim q es raycast interectiu amb 1 sol objecte o varis
-  const intersect = raycaster.intersectObject(sphere2)
-  console.log(intersect)
-  // const intersects = raycaster.intersectObjects([sphere, sphere2, sphere3])
-  // console.log(intersects)
+//   rayDirection.normalize()
+//   raycaster.set(rayOrigin, rayDirection)
+
+
+raycaster.setFromCamera(mouse, camera)
+
+const objectsToTest = [sphere, sphere2, sphere3]
+//   //Feim q es raycast interectiu amb 1 sol objecte o varis
+const intersects = raycaster.intersectObject(sphere2)
+//   console.log(intersects)
+
+//   //const objectsToTest = raycaster.intersectObjects([sphere, sphere2, sphere3])
+//   //console.log(intersects)
+
+
+for(const intersect of intersects) {
+    intersect.object.material.color.set('#0000ff')
+}
+
+for(const object of objectsToTest) {
+  if(!intersects.find(intersect => intersect.object === object)) {
+    object.material.color.set('#ff0000')
+  }
+}
+
+
 
   
   renderer.render(scene,camera)
