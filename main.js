@@ -16,7 +16,12 @@ const far = 1000;
 
 //--------------------------------HTML,JAVA,CSS--------------------------------
 
-
+const points = [
+  {
+  position: new THREE.Vector3(1.55, 0.3, - 0.6),
+  element: document.querySelector('.point-0')
+  }
+  ]
 
 //--------------------------------RAYCAST--------------------------------
 
@@ -141,6 +146,24 @@ tick();
 //Per a cada objecte de s'array mouli sa Y cada x temps
 function tick(time) {
   time *= 0.001;
+//  if (piano) {
+
+//  }
+
+// Update controls
+controls.update()
+// Recorrer cada punt de l’array points
+for(const point of points) 
+{
+  const screenPosition = point.position.clone()
+  screenPosition.project(camera)
+  
+
+  const translateX = screenPosition.x * window.innerWidth * 0.5
+  const translateY = -screenPosition.y * window.innerHeight * 0.5
+  point.element.style.transform = `translateX(${translateX}px)translateY(${translateY}px)`
+
+}
 
   const elapsedTime = clock.getElapsedTime()
   // Anima objectes abaix cap a dalt
@@ -154,7 +177,7 @@ function tick(time) {
 
   raycaster.setFromCamera(mouse, camera)
 
-  const objectsToTest = [sphere, sphere2, sphere3]
+  const objectsToTest = [sphere, sphere2, sphere3,]
   const ObjecteSol = [sphere]
   //   //Feim q es raycast interectiu amb 1 sol objecte o varis
   const intersects = raycaster.intersectObjects(objectsToTest)
@@ -163,9 +186,8 @@ function tick(time) {
   //   //const objectsToTest = raycaster.intersectObjects([sphere, sphere2, sphere3])
   //   //console.log(intersects)
 
-  console.log(intersects.length)
   for (const intersect of intersects) {
-    console.log("hola")
+    console.log("Canvi Color DAMUNT")
     intersect.object.material.color.set('#0000ff')
   }
 
