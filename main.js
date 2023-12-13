@@ -18,19 +18,19 @@ const far = 1000;
 
 const points = [
   {
-    position: new THREE.Vector3(0, 0, - 0.6),
+    position: new THREE.Vector3(-15, 0,  25),
     element: document.querySelector('.point-0')
   },
   {
-    position: new THREE.Vector3(-32, 0, - 1.6),
+    position: new THREE.Vector3(-47, 0,  25),
     element: document.querySelector('.point-1')
   },
   {
-    position: new THREE.Vector3(32, - 1.3, - 0.7),
+    position: new THREE.Vector3(17, 0,  25),
     element: document.querySelector('.point-2')
   },
   {
-    position: new THREE.Vector3(65, - 1.3, - 0.7),
+    position: new THREE.Vector3(50, - 1.3,  25),
     element: document.querySelector('.point-3')
   }
   ]
@@ -41,8 +41,8 @@ const points = [
 const raycaster = new THREE.Raycaster()
 
 //Raycast linia origen direccio
-const rayOrigin = new THREE.Vector3(-43, 10, 30)
-const rayDirection = new THREE.Vector3(10, 0, 0)
+// const rayOrigin = new THREE.Vector3(-43, 10, 30)
+// const rayDirection = new THREE.Vector3(10, 0, 0)
 
 
 //RATOLI RAYCAST
@@ -58,31 +58,31 @@ window.addEventListener('mousemove', (event) => {
 
 
 
-const arrowHelper = new THREE.ArrowHelper(rayDirection, rayOrigin, 200);
-scene.add(arrowHelper)
+// const arrowHelper = new THREE.ArrowHelper(rayDirection, rayOrigin, 200);
+// scene.add(arrowHelper)
 
-const geometry = new THREE.SphereGeometry(5, 32, 16);
-const material = new THREE.MeshStandardMaterial({ color: 0xf00650 });
-const material2 = new THREE.MeshStandardMaterial({ color: 0xf07550 });
-const material3 = new THREE.MeshStandardMaterial({ color: 0xf03450 });
-const sphere = new THREE.Mesh(geometry, material);
-sphere.position.set(-10, 10, 30);
-scene.add(sphere);
+// const geometry = new THREE.SphereGeometry(5, 32, 16);
+// const material = new THREE.MeshStandardMaterial({ color: 0xf00650 });
+// const material2 = new THREE.MeshStandardMaterial({ color: 0xf07550 });
+// const material3 = new THREE.MeshStandardMaterial({ color: 0xf03450 });
+// const sphere = new THREE.Mesh(geometry, material);
+// sphere.position.set(-10, 10, 30);
+// scene.add(sphere);
 
-const sphere2 = new THREE.Mesh(geometry, material2);
-sphere2.position.set(10, 50, 30);
-scene.add(sphere2);
+// const sphere2 = new THREE.Mesh(geometry, material2);
+// sphere2.position.set(10, 50, 30);
+// scene.add(sphere2);
 
-const sphere3 = new THREE.Mesh(geometry, material3);
-sphere3.position.set(30, 10, 30);
-scene.add(sphere3);
+// const sphere3 = new THREE.Mesh(geometry, material3);
+// sphere3.position.set(30, 10, 30);
+// scene.add(sphere3);
 
-const clock = new THREE.Clock()
+// const clock = new THREE.Clock()
 
 
 //---------------------CAMERA CONTROL----------------------
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-camera.position.set(0, 30, 100)
+camera.position.set(0, 30, 130)
 camera.rotation.set(0, 30, 2)
 camera.lookAt(new THREE.Vector3(0, 0, 0))
 
@@ -116,43 +116,37 @@ scene.background = environmentMap
   const color = 0xFFFFFF;
   const intensity = 20000;
   const light = new THREE.PointLight(color, intensity);
-  light.position.y = 100
-  light.position.z = 50
+  light.position.y = 70
+  light.position.z = 65
   scene.add(light);
-  light.castShadow = true
-
-  //Milloram les sombres. Per defecte es 512
-  light.shadow.mapSize.width = 1024
-  light.shadow.mapSize.height = 1024
-  //Desenfocam un poc
-  light.shadow.radius = 10
-
 }
 
 // array d’objectes dels quals hem d’actualitzar la rotació.
 const objects = [];
 
 
-//plane
-const planeGeo = new THREE.PlaneGeometry(400, 400)
-const planeMat = new THREE.MeshStandardMaterial({
-  color: 0xffffff
-})
-const plane = new THREE.Mesh(planeGeo, planeMat)
-plane.receiveShadow = true
-plane.position.y = -6
-plane.rotation.x = Math.PI * -0.5
-scene.add(plane)
+// //plane
+// const planeGeo = new THREE.PlaneGeometry(180, 180)
+// const planeMat = new THREE.MeshStandardMaterial({
+//   color: 0xffffff
+// })
+// const plane = new THREE.Mesh(planeGeo, planeMat)
+// plane.receiveShadow = true
+// plane.position.y = -6
+// plane.rotation.x = Math.PI * -0.5
+// scene.add(plane)
 
 
 let piano = null;
-ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(0, -3, 0), new THREE.Vector3(0.2, 0.2, 0.2));
+ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(-15, 6, 25), new THREE.Vector3(0.2, 0.2, 0.2));
 let guitar = null;
-ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-40, 6, 0), new THREE.Vector3(15, 15, 15));
+ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-55,14, 25), new THREE.Vector3(15, 15, 15));
 let organ = null;
-ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(60, -3, 0), new THREE.Vector3(15, 15, 15));
+ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(45, 5, 25), new THREE.Vector3(15, 15, 15));
 let violin = null;
-ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(30, 3.5, 0), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0,35,0));
+ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(15, 13, 25), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0,35,0));
+let theatre = null;
+ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(0, 3.5, 0), new THREE.Vector3(2, 2, 2), new THREE.Vector3(0,3.15,0));
 
 //cridam sa funcio tick q mos renderiza
 tick();
@@ -196,13 +190,14 @@ for(const point of points)
   point.element.style.transform = `translateX(${translateX}px)translateY(${translateY}px)`
 
 }
+  //------------- Anima objectes abaix cap a dalt
+  // const elapsedTime = clock.getElapsedTime()
 
-  const elapsedTime = clock.getElapsedTime()
-  // Anima objectes abaix cap a dalt
-  sphere.position.y = Math.sin(elapsedTime * 4.3) * 5.5 + 15
-  sphere2.position.y = Math.sin(elapsedTime * 0.8) * 5.5 + 15
-  sphere3.position.y = Math.sin(elapsedTime * 1.4) * 1.5 + 15
-
+  // sphere.position.y = Math.sin(elapsedTime * 4.3) * 5.5 + 15
+  // sphere2.position.y = Math.sin(elapsedTime * 0.8) * 5.5 + 15
+  // sphere3.position.y = Math.sin(elapsedTime * 1.4) * 1.5 + 15
+ //------------- ---------------------------------
+ 
   //   rayDirection.normalize()
 
   //----------------RAYCASTER LINIA -----------
@@ -236,31 +231,31 @@ for(const point of points)
   
 
 
-  const objectsToTest = [sphere, sphere2, sphere3,]
-  const ObjecteSol = [sphere]
-  //   //Feim q es raycast interectiu amb 1 sol objecte o varis
-  const intersects = raycaster.intersectObjects(objectsToTest)
-  //   console.log(intersects)
+  // const objectsToTest = [sphere, sphere2, sphere3,]
+  // const ObjecteSol = [sphere]
+  // //   //Feim q es raycast interectiu amb 1 sol objecte o varis
+  // const intersects = raycaster.intersectObjects(objectsToTest)
+  // //   console.log(intersects)
 
-  //----------------RAYCASTER MOUSE -----------
-  raycaster.setFromCamera(mouse, camera)
-  //------------------------------------------------
+  // //----------------RAYCASTER MOUSE -----------
+  // raycaster.setFromCamera(mouse, camera)
+  // //------------------------------------------------
 
-  //   //const objectsToTest = raycaster.intersectObjects([sphere, sphere2, sphere3])
-  //   //console.log(intersects)
+  // //   //const objectsToTest = raycaster.intersectObjects([sphere, sphere2, sphere3])
+  // //   //console.log(intersects)
 
 
 
-  for (const intersect of intersects) {
-    console.log("Canvi Color DAMUNT")
-    intersect.object.material.color.set('#0000ff')
-  }
+  // for (const intersect of intersects) {
+  //   console.log("Canvi Color DAMUNT")
+  //   intersect.object.material.color.set('#0000ff')
+  // }
 
-  for(const object of objectsToTest) {
-    if(!intersects.find(intersect => intersect.object === object)) {
-      object.material.color.set('#ff0000')
-    }
-  }
+  // for(const object of objectsToTest) {
+  //   if(!intersects.find(intersect => intersect.object === object)) {
+  //     object.material.color.set('#ff0000')
+  //   }
+  // }
 
 
 
@@ -288,7 +283,6 @@ function ImportGLTF(path, object3d, position, scale, rotation) {
         {
           object3d.rotation.set(rotation.x,rotation.y,rotation.z);
         }
-      
       scene.add(object3d);
 
     },

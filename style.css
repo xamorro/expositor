@@ -36,10 +36,10 @@ transition: transform 0.3s;
 .point .text
 {
 position: absolute;
-top: 30px;
+top: 60px;
 left: -260px;
 width: 500px;
-padding: 20px;
+padding: 30px;
 border-radius: 4px;
 background: #00000077;
 border: 1px solid #ffffff77;
@@ -49,7 +49,7 @@ font-family: Helvetica, Arial, sans-serif;
 font-weight: 100;
 font-size: 44px;
 opacity: 0;
-transition: opacity 0.3s;
+transition: opacity 1s;
 pointer-events: none;
 }
 
@@ -62,3 +62,14 @@ pointer-events: none;
 {
 transform: scale(4, 4);
 }
+
+/* #music {
+  background-color: black;
+  color: white;
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  text-decoration: none;
+  width: 100px;
+  text-align: center;
+} */
