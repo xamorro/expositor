@@ -18,8 +18,20 @@ const far = 1000;
 
 const points = [
   {
-  position: new THREE.Vector3(1.55, 0.3, - 0.6),
-  element: document.querySelector('.point-0')
+    position: new THREE.Vector3(0, 0, - 0.6),
+    element: document.querySelector('.point-0')
+  },
+  {
+    position: new THREE.Vector3(-32, 0, - 1.6),
+    element: document.querySelector('.point-1')
+  },
+  {
+    position: new THREE.Vector3(32, - 1.3, - 0.7),
+    element: document.querySelector('.point-2')
+  },
+  {
+    position: new THREE.Vector3(65, - 1.3, - 0.7),
+    element: document.querySelector('.point-3')
   }
   ]
 
@@ -27,6 +39,8 @@ const points = [
 
 
 const raycaster = new THREE.Raycaster()
+
+//Raycast linia origen direccio
 const rayOrigin = new THREE.Vector3(-43, 10, 30)
 const rayDirection = new THREE.Vector3(10, 0, 0)
 
@@ -56,7 +70,7 @@ sphere.position.set(-10, 10, 30);
 scene.add(sphere);
 
 const sphere2 = new THREE.Mesh(geometry, material2);
-sphere2.position.set(10, 10, 30);
+sphere2.position.set(10, 50, 30);
 scene.add(sphere2);
 
 const sphere3 = new THREE.Mesh(geometry, material3);
@@ -132,13 +146,13 @@ scene.add(plane)
 
 
 let piano = null;
-ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(0, -2, 0), new THREE.Vector3(0.2, 0.2, 0.2));
+ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(0, -3, 0), new THREE.Vector3(0.2, 0.2, 0.2));
 let guitar = null;
 ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-40, 6, 0), new THREE.Vector3(15, 15, 15));
 let organ = null;
-ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(60, 0, 0), new THREE.Vector3(15, 15, 15));
+ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(60, -3, 0), new THREE.Vector3(15, 15, 15));
 let violin = null;
-ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(30, 3.5, 0), new THREE.Vector3(30, 30, 30));
+ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(30, 3.5, 0), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0,35,0));
 
 //cridam sa funcio tick q mos renderiza
 tick();
@@ -149,6 +163,24 @@ function tick(time) {
 //  if (piano) {
 
 //  }
+
+
+
+let sceneReady = false
+const loadingManager = new THREE.LoadingManager(
+// Loaded
+() => {
+// ...
+
+window.setTimeout(() =>
+{
+sceneReady = true
+}, 2000)
+},
+
+// ...
+)
+
 
 // Update controls
 controls.update()
@@ -172,10 +204,37 @@ for(const point of points)
   sphere3.position.y = Math.sin(elapsedTime * 1.4) * 1.5 + 15
 
   //   rayDirection.normalize()
-  //   raycaster.set(rayOrigin, rayDirection)
 
+  //----------------RAYCASTER LINIA -----------
+              // raycaster.set(rayOrigin, rayDirection)
+  //------------------------------------------------
+  
+  // if(sceneReady) {
+  //   for(const point of points) {
+    
+  //   const screenPosition = point.position.clone()
+  //   screenPosition.project(camera)
 
-  raycaster.setFromCamera(mouse, camera)
+  //   //raycaster.setFromCamera(screenPosition, camera)
+  //   const intersects = raycaster.intersectObjects(scene.children, true)
+
+  //   if(intersects.length === 0) {
+  //     point.element.classList.add('visible')
+  //     }
+  //     else {
+  //       const intersectionDistance = intersects[0].distance
+  //       const pointDistance = point.position.distanceTo(camera.position)
+  //       if(intersectionDistance < pointDistance) {
+  //         point.element.classList.remove('visible')
+  //       }
+  //       else {
+  //       point.element.classList.add('visible')
+  //       }
+  //     }
+  //   }
+  // }
+  
+
 
   const objectsToTest = [sphere, sphere2, sphere3,]
   const ObjecteSol = [sphere]
@@ -183,8 +242,14 @@ for(const point of points)
   const intersects = raycaster.intersectObjects(objectsToTest)
   //   console.log(intersects)
 
+  //----------------RAYCASTER MOUSE -----------
+  raycaster.setFromCamera(mouse, camera)
+  //------------------------------------------------
+
   //   //const objectsToTest = raycaster.intersectObjects([sphere, sphere2, sphere3])
   //   //console.log(intersects)
+
+
 
   for (const intersect of intersects) {
     console.log("Canvi Color DAMUNT")
@@ -206,7 +271,7 @@ for(const point of points)
 
 
 
-function ImportGLTF(path, object3d, position, scale) {
+function ImportGLTF(path, object3d, position, scale, rotation) {
   //Instanciem el loader de models GLTF
   const loader = new GLTFLoader();
 
@@ -219,6 +284,11 @@ function ImportGLTF(path, object3d, position, scale) {
       object3d = gltf.scene;
       object3d.position.set(position.x, position.y, position.z);
       object3d.scale.set(scale.x, scale.y, scale.z);
+        if (rotation)
+        {
+          object3d.rotation.set(rotation.x,rotation.y,rotation.z);
+        }
+      
       scene.add(object3d);
 
     },

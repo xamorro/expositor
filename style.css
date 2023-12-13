@@ -25,7 +25,7 @@ font-family: Helvetica, Arial, sans-serif;
 text-align: center;
 line-height: 40px;
 font-weight: 100;
-font-size: 14px;
+font-size: 100%; /*40px*/
 cursor: help;
 transform: scale(0, 0);
 transition: transform 0.3s;
@@ -37,8 +37,8 @@ transition: transform 0.3s;
 {
 position: absolute;
 top: 30px;
-left: -120px;
-width: 200px;
+left: -260px;
+width: 500px;
 padding: 20px;
 border-radius: 4px;
 background: #00000077;
@@ -47,7 +47,7 @@ color: #ffffff;
 line-height: 1.3em;
 font-family: Helvetica, Arial, sans-serif;
 font-weight: 100;
-font-size: 14px;
+font-size: 44px;
 opacity: 0;
 transition: opacity 0.3s;
 pointer-events: none;
@@ -60,5 +60,5 @@ pointer-events: none;
 
 .point.visible .label
 {
-transform: scale(1, 1);
+transform: scale(4, 4);
 }
