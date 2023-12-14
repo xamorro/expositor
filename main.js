@@ -19,23 +19,36 @@ const far = 1000;
 
 const points = [
   {
-    position: new THREE.Vector3(-15, 0,  25),
+    position: new THREE.Vector3(-15, 0, 25),
     element: document.querySelector('.point-0')
   },
   {
-    position: new THREE.Vector3(-47, 0,  25),
+    position: new THREE.Vector3(-47, 0, 25),
     element: document.querySelector('.point-1')
   },
   {
-    position: new THREE.Vector3(17, 0,  25),
+    position: new THREE.Vector3(17, 0, 25),
     element: document.querySelector('.point-2')
   },
   {
-    position: new THREE.Vector3(50, - 1.3,  25),
+    position: new THREE.Vector3(50, - 1.3, 25),
     element: document.querySelector('.point-3')
   }
-  ]
+]
 
+
+document.querySelector(".point-0 .label").addEventListener('click', function () {
+  camera.lookAt(piano)
+});
+document.querySelector(".point-1 .label").addEventListener('click', function () {
+  CameraGuitar();
+});
+document.querySelector(".point-2 .label").addEventListener('click', function () {
+  CameraViolin();
+});
+document.querySelector(".point-3 .label").addEventListener('click', function () {
+  CameraOrgano();
+});
 //--------------------------------RAYCAST--------------------------------
 
 
@@ -48,8 +61,8 @@ const raycaster = new THREE.Raycaster()
 
 //RATOLI RAYCAST
 const mouse = new THREE.Vector2()
-  mouse.x = -1
-  mouse.y = - 1;
+mouse.x = -1
+mouse.y = - 1;
 window.addEventListener('mousemove', (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
@@ -59,26 +72,25 @@ window.addEventListener('mousemove', (event) => {
 
 
 
-// const arrowHelper = new THREE.ArrowHelper(rayDirection, rayOrigin, 200);
-// scene.add(arrowHelper)
 
-// const geometry = new THREE.SphereGeometry(5, 32, 16);
-// const material = new THREE.MeshStandardMaterial({ color: 0xf00650 });
-// const material2 = new THREE.MeshStandardMaterial({ color: 0xf07550 });
-// const material3 = new THREE.MeshStandardMaterial({ color: 0xf03450 });
-// const sphere = new THREE.Mesh(geometry, material);
-// sphere.position.set(-10, 10, 30);
-// scene.add(sphere);
+const material = new THREE.MeshStandardMaterial({ color: 0xf00650 });
 
-// const sphere2 = new THREE.Mesh(geometry, material2);
-// sphere2.position.set(10, 50, 30);
-// scene.add(sphere2);
+const SphereGeometry = new THREE.SphereGeometry();
+const sphere = new THREE.Mesh(SphereGeometry, material);
+sphere.position.set(-10, 20, 30);
+sphere.scale.set(10, 10, 10);
+sphere.castShadow = true;
+sphere.receiveShadow = true;
+//scene.add(sphere);
 
-// const sphere3 = new THREE.Mesh(geometry, material3);
-// sphere3.position.set(30, 10, 30);
-// scene.add(sphere3);
-
-// const clock = new THREE.Clock()
+const PlaneGeometry = new THREE.PlaneGeometry();
+const plane = new THREE.Mesh(PlaneGeometry, material);
+plane.position.set(-10, 10, 30);
+plane.scale.set(100, 100, 100);
+plane.rotation.set(5, 0, 0);
+plane.castShadow = true;
+plane.receiveShadow = true;
+//scene.add(plane);
 
 
 //---------------------CAMERA CONTROL----------------------
@@ -96,8 +108,8 @@ renderer.shadowMap.enabled = true
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-const controls = new OrbitControls(camera, renderer.domElement)
-controls.enableDamping = true;
+// const controls = new OrbitControls(camera, renderer.domElement)
+// controls.enableDamping = true;
 
 ////////ENTORN/////////////////
 const cubeTextureLoader = new THREE.CubeTextureLoader()
@@ -119,26 +131,27 @@ scene.background = environmentMap
   const light = new THREE.PointLight(color, intensity);
   light.position.y = 70
   light.position.z = 65
+  light.castShadow = true
   scene.add(light);
 }
 
 
-document.querySelector(".point-0 .label").addEventListener('click', function() {
-  CameraPiano();
-});
+
 
 
 
 const guitar = new THREE.Object3D()
-ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-55,14, 25), new THREE.Vector3(15, 15, 15));
+ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-55, 14, 25), new THREE.Vector3(15, 15, 15));
 scene.add(guitar);
 
 const piano = new THREE.Object3D()
-ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(-15, 6, 25) ,new THREE.Vector3(0.2, 0.2, 0.2));
+ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(-15, 4, 25), new THREE.Vector3(0.2, 0.2, 0.2));
+piano.castShadow = true;
+piano.receiveShadow = true;
 scene.add(piano);
 
 const violin = new THREE.Object3D()
-ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(15, 13, 25), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0,35,0));
+ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(15, 13, 25), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0, 35, 0));
 scene.add(violin);
 
 const organ = new THREE.Object3D()
@@ -146,46 +159,135 @@ ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(45
 scene.add(organ);
 
 const theatre = new THREE.Object3D()
-ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(0, 3.5, 0), new THREE.Vector3(2, 2, 2), new THREE.Vector3(0,3.15,0));
+ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(0, 3.5, 0), new THREE.Vector3(2, 2, 2), new THREE.Vector3(0, 3.15, 0));
 scene.add(theatre);
 
 
 //FUNCTIONS ANIMACIONS CAMERA
-function CameraPiano(){
+function CameraPiano() {
   // Exemple d´animació amb GSAP, efecte yoyo amb la càmera
-    console.log("holaaa")
-    gsap.to(camera.position, {
-      duration: 3,
-      x: 100,
-      y: 40,
-      z: 20,
-      yoyo: true,
-      repeat: -1, // repetir indef
-      ease: "power1.inOut", // tipus de transcisió
-    });
+  console.log("holaaa")
+  gsap.to(camera.position, {
+    duration: 3,
+    x: -15,
+    y: 20,
+    z: 80,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+    onUpdate: function () {
+      camera.lookAt(piano.position)
+    }
+    //onComplete//
+  });
 
-    gsap.to(piano.scale, {
-      duration: 1,
-      y: 1.10,
-      yoyo: true,
-      repeat: -1, // repetir indef
-      ease: "power1.inOut", // tipus de transcisió
-    });
-  }
+  gsap.to(piano.scale, {
+    duration: 1,
+    y: 1.10,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+  });
+}
 
-  
-  
+//----------------------------------------------------------
+function CameraGuitar() {
+  // Exemple d´animació amb GSAP, efecte yoyo amb la càmera
+  console.log("holaaa")
+  gsap.to(camera.position, {
+    duration: 3,
+    x: -55,
+    y: 20,
+    z: 80,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+    onUpdate: function () {
+      camera.lookAt(guitar.position)
+    }
+  });
 
-  
-  // gsap.to(camera.position, {
-  //   duration: 10,
-  //   x: 100, //DRETA ESQUERRA
-  //   y: 40, //ADALT ABAIX
-  //   z: 20,
-  //   yoyo: true,
-  //   repeat: -1, // repetir indef
-  //   ease: "power1.inOut", // tipus de transcisió
-  // });
+  gsap.to(guitar.scale, {
+    duration: 1,
+    y: 1.10,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+  });
+}
+
+//----------------------------------------------------------
+function CameraViolin() {
+  // Exemple d´animació amb GSAP, efecte yoyo amb la càmera
+  console.log("holaaa")
+  gsap.to(camera.position, {
+    duration: 3,
+    x: 15,
+    y: 20,
+    z: 80,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+    onUpdate: function () {
+      camera.lookAt(violin.position)
+    }
+  });
+
+  gsap.to(violin.scale, {
+    duration: 1,
+    y: 1.10,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+  });
+}
+
+
+//----------------------------------------------------------
+function CameraOrgano() {
+  // Exemple d´animació amb GSAP, efecte yoyo amb la càmera
+  console.log("holaaa")
+  gsap.to(camera.position, {
+    duration: 3,
+    x: 45,
+    y: 20,
+    z: 80,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+    onUpdate: function () {
+      camera.lookAt(organ.position)
+    }
+  });
+
+  gsap.to(organ.scale, {
+    duration: 1,
+    y: 1.10,
+    yoyo: true,
+    repeat: -1, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+  });
+}
+
+
+//----------------------------------------------------------
+
+
+
+
+
+
+
+
+// gsap.to(camera.position, {
+//   duration: 10,
+//   x: 100, //DRETA ESQUERRA
+//   y: 40, //ADALT ABAIX
+//   z: 20,
+//   yoyo: true,
+//   repeat: -1, // repetir indef
+//   ease: "power1.inOut", // tipus de transcisió
+// });
 
 
 
@@ -199,53 +301,51 @@ function tick(time) {
 
 
 
-let sceneReady = false
-const loadingManager = new THREE.LoadingManager(
-// Loaded
-() => {
-// ...
+  let sceneReady = false
+  const loadingManager = new THREE.LoadingManager(
+    // Loaded
+    () => {
+      // ...
 
-window.setTimeout(() =>
-{
-sceneReady = true
-}, 2000)
-},
+      window.setTimeout(() => {
+        sceneReady = true
+      }, 2000)
+    },
 
-// ...
-)
+    // ...
+  )
 
 
-// Update controls
-controls.update()
-// Recorrer cada punt de l’array points
-for(const point of points) 
-{
-  const screenPosition = point.position.clone()
-  screenPosition.project(camera)
-  
+  // Update controls
+  //controls.update()
+  // Recorrer cada punt de l’array points
+  for (const point of points) {
+    const screenPosition = point.position.clone()
+    screenPosition.project(camera)
 
-  const translateX = screenPosition.x * window.innerWidth * 0.5
-  const translateY = -screenPosition.y * window.innerHeight * 0.5
-  point.element.style.transform = `translateX(${translateX}px)translateY(${translateY}px)`
 
-}
+    const translateX = screenPosition.x * window.innerWidth * 0.5
+    const translateY = -screenPosition.y * window.innerHeight * 0.5
+    point.element.style.transform = `translateX(${translateX}px)translateY(${translateY}px)`
+
+  }
   //------------- Anima objectes abaix cap a dalt
   // const elapsedTime = clock.getElapsedTime()
 
   // sphere.position.y = Math.sin(elapsedTime * 4.3) * 5.5 + 15
   // sphere2.position.y = Math.sin(elapsedTime * 0.8) * 5.5 + 15
   // sphere3.position.y = Math.sin(elapsedTime * 1.4) * 1.5 + 15
- //------------- ---------------------------------
- 
+  //------------- ---------------------------------
+
   //   rayDirection.normalize()
 
   //----------------RAYCASTER LINIA -----------
-              // raycaster.set(rayOrigin, rayDirection)
+  // raycaster.set(rayOrigin, rayDirection)
   //------------------------------------------------
-  
+
   // if(sceneReady) {
   //   for(const point of points) {
-    
+
   //   const screenPosition = point.position.clone()
   //   screenPosition.project(camera)
 
@@ -267,7 +367,7 @@ for(const point of points)
   //     }
   //   }
   // }
-  
+
 
 
   // const objectsToTest = [sphere, sphere2, sphere3,]
@@ -296,7 +396,7 @@ for(const point of points)
   //   }
   // }
 
-
+  console.log(camera)
 
 
   renderer.render(scene, camera)
@@ -305,7 +405,7 @@ for(const point of points)
 
 let model = null
 
-function ImportGLTF(path, object3d, position, scale,  rotation) {
+function ImportGLTF(path, object3d, position, scale, rotation) {
   //Instanciem el loader de models GLTF
   const loader = new GLTFLoader();
 
@@ -318,16 +418,17 @@ function ImportGLTF(path, object3d, position, scale,  rotation) {
       model = gltf.scene;
       model.position.set(position.x, position.y, position.z)
       model.scale.set(scale.x, scale.y, scale.z);
-        if (rotation)
-        {
-          model.rotation.set(rotation.x,rotation.y,rotation.z);
-        }
-        // model.traverse(function(model){
-        //   if(model.isMesh){
-        //     model.castShadow=true;
-        // //   }
-            
-        //   });
+      if (rotation) {
+        model.rotation.set(rotation.x, rotation.y, rotation.z);
+      }
+      // model.traverse(function(model){
+      //   if(model.isMesh){
+      //     model.castShadow=true;
+      // //   }
+
+      //   });
+      model.castShadow = true
+      model.receiveShadow = true
       object3d.add(model);
 
     },
