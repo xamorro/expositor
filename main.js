@@ -36,9 +36,10 @@ const points = [
   }
 ]
 
+//----------------ON CLICK----------------
 
 document.querySelector(".point-0 .label").addEventListener('click', function () {
-  camera.lookAt(piano)
+  CameraPiano();
 });
 document.querySelector(".point-1 .label").addEventListener('click', function () {
   CameraGuitar();
@@ -49,6 +50,20 @@ document.querySelector(".point-2 .label").addEventListener('click', function () 
 document.querySelector(".point-3 .label").addEventListener('click', function () {
   CameraOrgano();
 });
+
+document.querySelector(".point-0 .return").addEventListener('click', function () {
+  ReturnPage(piano.position);
+});
+document.querySelector(".point-1 .return").addEventListener('click', function () {
+  ReturnPage(guitar.position);
+});
+document.querySelector(".point-2 .return").addEventListener('click', function () {
+  ReturnPage(violin.position);
+});
+document.querySelector(".point-3 .return").addEventListener('click', function () {
+  ReturnPage(organ.position);
+});
+
 //--------------------------------RAYCAST--------------------------------
 
 
@@ -141,26 +156,30 @@ scene.background = environmentMap
 
 
 const guitar = new THREE.Object3D()
-ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-55, 14, 25), new THREE.Vector3(15, 15, 15));
+ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(15, 15, 15));
+guitar.position.set(-55, 14, 25);
 scene.add(guitar);
 
 const piano = new THREE.Object3D()
-ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(-15, 4, 25), new THREE.Vector3(0.2, 0.2, 0.2));
-piano.castShadow = true;
-piano.receiveShadow = true;
+ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(0.2, 0.2, 0.2));
+piano.position.set(-15, 4, 25);
 scene.add(piano);
 
 const violin = new THREE.Object3D()
-ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(15, 13, 25), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0, 35, 0));
+ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(30, 30, 30), new THREE.Vector3(0, 35, 0));
+violin.position.set(15, 13, 25);
 scene.add(violin);
 
 const organ = new THREE.Object3D()
-ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(45, 5, 25), new THREE.Vector3(15, 15, 15));
+ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(15, 15, 15));
+organ.position.set(45, 5, 25);
 scene.add(organ);
 
 const theatre = new THREE.Object3D()
-ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(0, 3.5, 0), new THREE.Vector3(2, 2, 2), new THREE.Vector3(0, 3.15, 0));
+ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(2, 2, 2), new THREE.Vector3(0, 3.15, 0));
+theatre.position.set(0, 3.5, 0);
 scene.add(theatre);
+
 
 
 //FUNCTIONS ANIMACIONS CAMERA
@@ -172,14 +191,17 @@ function CameraPiano() {
     x: -15,
     y: 20,
     z: 80,
-    yoyo: true,
-    repeat: -1, // repetir indef
+    //yoyo: true,
+    // repeat: -1, // repetir indef
     ease: "power1.inOut", // tipus de transcisió
     onUpdate: function () {
       camera.lookAt(piano.position)
+    },
+    onComplete: function () {
+     document.querySelector('.point-0 .info').style.opacity = "1"
+     document.querySelector('.point-0 .return').style.opacity = "1"
     }
-    //onComplete//
-  });
+   });
 
   gsap.to(piano.scale, {
     duration: 1,
@@ -198,12 +220,14 @@ function CameraGuitar() {
     duration: 3,
     x: -55,
     y: 20,
-    z: 80,
-    yoyo: true,
-    repeat: -1, // repetir indef
+    z: 80, 
     ease: "power1.inOut", // tipus de transcisió
     onUpdate: function () {
       camera.lookAt(guitar.position)
+    },
+    onComplete: function () {
+     document.querySelector('.point-1 .info').style.opacity = "1"
+     document.querySelector('.point-1 .return').style.opacity = "1"
     }
   });
 
@@ -225,12 +249,14 @@ function CameraViolin() {
     x: 15,
     y: 20,
     z: 80,
-    yoyo: true,
-    repeat: -1, // repetir indef
     ease: "power1.inOut", // tipus de transcisió
     onUpdate: function () {
       camera.lookAt(violin.position)
-    }
+    },
+    onComplete: function () {
+      document.querySelector('.point-2 .info').style.opacity = "1"
+      document.querySelector('.point-2 .return').style.opacity = "1"
+     }
   });
 
   gsap.to(violin.scale, {
@@ -252,12 +278,14 @@ function CameraOrgano() {
     x: 45,
     y: 20,
     z: 80,
-    yoyo: true,
-    repeat: -1, // repetir indef
     ease: "power1.inOut", // tipus de transcisió
     onUpdate: function () {
       camera.lookAt(organ.position)
-    }
+    },
+    onComplete: function () {
+      document.querySelector('.point-3 .info').style.opacity = "1"
+      document.querySelector('.point-3 .return').style.opacity = "1"
+     }
   });
 
   gsap.to(organ.scale, {
@@ -268,6 +296,44 @@ function CameraOrgano() {
     ease: "power1.inOut", // tipus de transcisió
   });
 }
+
+//----------------------------------------------------------
+function ReturnPage(object) {
+  // Exemple d´animació amb GSAP, efecte yoyo amb la càmera
+  console.log("vuelvo")
+  gsap.to(camera.position, {
+    duration: 3,
+    x: 0,
+    y: 30,
+    z: 130, // repetir indef
+    ease: "power1.inOut", // tipus de transcisió
+    onStart: function(){
+      if (object == piano.position){
+        document.querySelector('.point-0 .info').style.opacity = "0"
+        document.querySelector('.point-0 .return').style.opacity = "0"
+      }else if (object == guitar.position){
+        document.querySelector('.point-1 .info').style.opacity = "0"
+        document.querySelector('.point-1 .return').style.opacity = "0"
+      }else if (object == violin.position){
+        document.querySelector('.point-2 .info').style.opacity = "0"
+        document.querySelector('.point-2 .return').style.opacity = "0"
+      }else if (object == organ.position){
+        document.querySelector('.point-3 .info').style.opacity = "0"
+        document.querySelector('.point-3 .return').style.opacity = "0"
+      }
+
+    },
+    onUpdate: function () {
+      camera.lookAt(object)
+    },
+    onComplete: function () {
+      camera.lookAt(0,0,0)
+    }
+  });
+}
+
+
+
 
 
 //----------------------------------------------------------
@@ -396,7 +462,7 @@ function tick(time) {
   //   }
   // }
 
-  console.log(camera)
+ 
 
 
   renderer.render(scene, camera)
@@ -405,7 +471,7 @@ function tick(time) {
 
 let model = null
 
-function ImportGLTF(path, object3d, position, scale, rotation) {
+function ImportGLTF(path, object3d, scale, rotation) {
   //Instanciem el loader de models GLTF
   const loader = new GLTFLoader();
 
@@ -416,7 +482,6 @@ function ImportGLTF(path, object3d, position, scale, rotation) {
     //FUNCIONS DE CALLBACK
     function (gltf) {
       model = gltf.scene;
-      model.position.set(position.x, position.y, position.z)
       model.scale.set(scale.x, scale.y, scale.z);
       if (rotation) {
         model.rotation.set(rotation.x, rotation.y, rotation.z);
