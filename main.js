@@ -2,6 +2,7 @@ import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import './style.css'
+import { gsap } from "gsap";
 
 //Loader de models GLTF
 let loader = null
@@ -121,32 +122,72 @@ scene.background = environmentMap
   scene.add(light);
 }
 
-// array d’objectes dels quals hem d’actualitzar la rotació.
-const objects = [];
+
+document.querySelector(".point-0 .label").addEventListener('click', function() {
+  CameraPiano();
+});
 
 
-// //plane
-// const planeGeo = new THREE.PlaneGeometry(180, 180)
-// const planeMat = new THREE.MeshStandardMaterial({
-//   color: 0xffffff
-// })
-// const plane = new THREE.Mesh(planeGeo, planeMat)
-// plane.receiveShadow = true
-// plane.position.y = -6
-// plane.rotation.x = Math.PI * -0.5
-// scene.add(plane)
 
-
-let piano = null;
-ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(-15, 6, 25), new THREE.Vector3(0.2, 0.2, 0.2));
-let guitar = null;
+const guitar = new THREE.Object3D()
 ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(-55,14, 25), new THREE.Vector3(15, 15, 15));
-let organ = null;
-ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(45, 5, 25), new THREE.Vector3(15, 15, 15));
-let violin = null;
+scene.add(guitar);
+
+const piano = new THREE.Object3D()
+ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(-15, 6, 25) ,new THREE.Vector3(0.2, 0.2, 0.2));
+scene.add(piano);
+
+const violin = new THREE.Object3D()
 ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(15, 13, 25), new THREE.Vector3(30, 30, 30), new THREE.Vector3(0,35,0));
-let theatre = null;
+scene.add(violin);
+
+const organ = new THREE.Object3D()
+ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(45, 5, 25), new THREE.Vector3(15, 15, 15));
+scene.add(organ);
+
+const theatre = new THREE.Object3D()
 ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(0, 3.5, 0), new THREE.Vector3(2, 2, 2), new THREE.Vector3(0,3.15,0));
+scene.add(theatre);
+
+
+//FUNCTIONS ANIMACIONS CAMERA
+function CameraPiano(){
+  // Exemple d´animació amb GSAP, efecte yoyo amb la càmera
+    console.log("holaaa")
+    gsap.to(camera.position, {
+      duration: 3,
+      x: 100,
+      y: 40,
+      z: 20,
+      yoyo: true,
+      repeat: -1, // repetir indef
+      ease: "power1.inOut", // tipus de transcisió
+    });
+
+    gsap.to(piano.scale, {
+      duration: 1,
+      y: 1.10,
+      yoyo: true,
+      repeat: -1, // repetir indef
+      ease: "power1.inOut", // tipus de transcisió
+    });
+  }
+
+  
+  
+
+  
+  // gsap.to(camera.position, {
+  //   duration: 10,
+  //   x: 100, //DRETA ESQUERRA
+  //   y: 40, //ADALT ABAIX
+  //   z: 20,
+  //   yoyo: true,
+  //   repeat: -1, // repetir indef
+  //   ease: "power1.inOut", // tipus de transcisió
+  // });
+
+
 
 //cridam sa funcio tick q mos renderiza
 tick();
@@ -154,9 +195,7 @@ tick();
 //Per a cada objecte de s'array mouli sa Y cada x temps
 function tick(time) {
   time *= 0.001;
-//  if (piano) {
 
-//  }
 
 
 
@@ -264,9 +303,9 @@ for(const point of points)
   requestAnimationFrame(tick)
 }
 
+let model = null
 
-
-function ImportGLTF(path, object3d, position, scale, rotation) {
+function ImportGLTF(path, object3d, position, scale,  rotation) {
   //Instanciem el loader de models GLTF
   const loader = new GLTFLoader();
 
@@ -276,14 +315,20 @@ function ImportGLTF(path, object3d, position, scale, rotation) {
     path,
     //FUNCIONS DE CALLBACK
     function (gltf) {
-      object3d = gltf.scene;
-      object3d.position.set(position.x, position.y, position.z);
-      object3d.scale.set(scale.x, scale.y, scale.z);
+      model = gltf.scene;
+      model.position.set(position.x, position.y, position.z)
+      model.scale.set(scale.x, scale.y, scale.z);
         if (rotation)
         {
-          object3d.rotation.set(rotation.x,rotation.y,rotation.z);
+          model.rotation.set(rotation.x,rotation.y,rotation.z);
         }
-      scene.add(object3d);
+        // model.traverse(function(model){
+        //   if(model.isMesh){
+        //     model.castShadow=true;
+        // //   }
+            
+        //   });
+      object3d.add(model);
 
     },
     function (xhr) {
@@ -296,13 +341,6 @@ function ImportGLTF(path, object3d, position, scale, rotation) {
       //console.error(error);
     }
   );
-
-
-
-
-
-
-
 
 
 
