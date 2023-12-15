@@ -279,6 +279,10 @@ function CameraOrgano() {
     y: 20,
     z: 80,
     ease: "power1.inOut", // tipus de transcisió
+    onStart: function(){
+      document.querySelector('.point-3 .label ').style.opacity = "0"
+    },
+    
     onUpdate: function () {
       camera.lookAt(organ.position)
     },
@@ -321,13 +325,25 @@ function ReturnPage(object) {
         document.querySelector('.point-3 .info').style.opacity = "0"
         document.querySelector('.point-3 .return').style.opacity = "0"
       }
-
     },
     onUpdate: function () {
       camera.lookAt(object)
     },
     onComplete: function () {
       camera.lookAt(0,0,0)
+      if (object == piano.position){
+        document.querySelector('.point-0 .label').style.opacity = "1"
+        gsap.killTweensOf(piano.scale);
+      }else if (object == guitar.position){
+        document.querySelector('.point-1 .label').style.opacity = "1"
+        gsap.killTweensOf(guitar.scale);
+      }else if (object == violin.position){
+        document.querySelector('.point-2 .label').style.opacity = "1"
+        gsap.killTweensOf(violin.scale);
+      }else if (object == organ.position){
+        document.querySelector('.point-3 .label').style.opacity = "1"
+        gsap.killTweensOf(organ.scale);
+      }
     }
   });
 }

@@ -6,7 +6,7 @@ body {
 .point
 {
 position: absolute;
-top: 50%;
+top: 30%;
 left: 50%;
 }
 
@@ -70,8 +70,8 @@ transform: scale(4, 4);
 {
 position: absolute;
 top: 60px;
-left: -500px;
-width: 1000px;
+left: -650px;
+width: 1300px;
 padding: 30px;
 border-radius: 4px;
 background: #00000077;
@@ -86,7 +86,6 @@ opacity: 0;
 transition: opacity 1s;
 pointer-events: none;
 }
-
 
 .point .return{
   position: absolute;
