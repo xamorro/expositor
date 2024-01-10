@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import './style.css'
 import { gsap } from "gsap";
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 
 //Loader de models GLTF
 let loader = null
@@ -123,6 +124,9 @@ renderer.shadowMap.enabled = true
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
+document.body.appendChild( VRButton.createButton( renderer ) );
+renderer.xr.enabled = true;
+
 // const controls = new OrbitControls(camera, renderer.domElement)
 // controls.enableDamping = true;
 
@@ -157,27 +161,27 @@ scene.background = environmentMap
 
 const guitar = new THREE.Object3D()
 ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(15, 15, 15));
-guitar.position.set(-55, 14, 25);
+guitar.position.set(-55, 14, -25);
 scene.add(guitar);
 
 const piano = new THREE.Object3D()
 ImportGLTF("Models/old_piano.glb", piano, new THREE.Vector3(0.2, 0.2, 0.2));
-piano.position.set(-15, 4, 25);
+piano.position.set(-15, 4, -25);
 scene.add(piano);
 
 const violin = new THREE.Object3D()
 ImportGLTF("Models/stylized_violin.glb", violin, new THREE.Vector3(30, 30, 30), new THREE.Vector3(0, 35, 0));
-violin.position.set(15, 13, 25);
+violin.position.set(15, 13, -25);
 scene.add(violin);
 
 const organ = new THREE.Object3D()
 ImportGLTF("Models/pipe_organ_espresso_machine.glb", organ, new THREE.Vector3(15, 15, 15));
-organ.position.set(45, 5, 25);
+organ.position.set(45, 5, -25);
 scene.add(organ);
 
 const theatre = new THREE.Object3D()
 ImportGLTF("Models/theatre_cheap_template.glb", theatre, new THREE.Vector3(2, 2, 2), new THREE.Vector3(0, 3.15, 0));
-theatre.position.set(0, 3.5, 0);
+theatre.position.set(0, -5.5, -25);
 scene.add(theatre);
 
 
@@ -482,7 +486,7 @@ function tick(time) {
 
 
   renderer.render(scene, camera)
-  requestAnimationFrame(tick)
+  renderer.setAnimationLoop(tick);
 }
 
 let model = null
