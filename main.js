@@ -4,6 +4,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import './style.css'
 import { gsap } from "gsap";
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+import { XRControllerModelFactory } from 
+                 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+
 
 //Loader de models GLTF
 let loader = null
@@ -85,10 +88,6 @@ window.addEventListener('mousemove', (event) => {
   //console.log(mouse)
 })
 
-
-
-
-
 const material = new THREE.MeshStandardMaterial({ color: 0xf00650 });
 
 const SphereGeometry = new THREE.SphereGeometry();
@@ -155,7 +154,38 @@ scene.background = environmentMap
 }
 
 
+//--------------------VR Controller-------------------------------
+const controller1 = renderer.xr.getController( 0 );
+const controller2 = renderer.xr.getController( 1 );
 
+
+function onSelectStart() {
+  this.userData.isSelecting = true;
+}
+
+function onSelectEnd() {
+  this.userData.isSelecting = false;
+}
+
+controller1.addEventListener( 'selectstart', onSelectStart);
+controller1.addEventListener( 'selectend', onSelectEnd );
+controller1.addEventListener( 'connected', function ( event ) {
+    this.add( buildController( event.data ) );
+} );
+
+controller2.addEventListener( 'selectstart', onSelectStart);
+controller2.addEventListener( 'selectend',  onSelectEnd);
+controller2.addEventListener( 'connected', function ( event ) {
+    this.add( buildController( event.data ) );
+} );
+
+controller2.addEventListener( 'disconnected', function () {
+  this.remove( this.children[ 0 ] );
+} );
+
+
+scene.add(controller1)
+scene.add(controller2)
 
 
 
