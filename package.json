@@ -10,10 +10,11 @@
     "deploy-gh-pages": "gh-pages -d dist"
   },
   "devDependencies": {
-    "gh-pages": "^6.1.0",
+    "gh-pages": "^6.1.1",
     "vite": "^4.5.1"
   },
   "dependencies": {
+    "cannon": "^0.6.2",
     "gsap": "^3.12.3",
     "three": "^0.158.0"
   }
