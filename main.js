@@ -95,9 +95,9 @@ const material2 = new THREE.MeshStandardMaterial({ color: 0xd0d0d0 });
 
 const PlaneGeometry = new THREE.PlaneGeometry();
 const plane = new THREE.Mesh(PlaneGeometry, material);
-plane.position.set(-10, -30, 30);
-plane.scale.set(100, 100, 100);
-plane.rotation.set(4.7, 0, 0);
+plane.position.set(0,-4, 0);
+plane.scale.set(10, 10, 10);
+plane.rotation.set(-Math.PI / 2, 0, 0);
 plane.castShadow = true;
 plane.receiveShadow = true;
 scene.add(plane);
@@ -114,7 +114,7 @@ scene.add(sphere);
 
 //---------------------CAMERA CONTROL----------------------
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
-camera.position.set(0, 5, 80)
+camera.position.set(0, 10, 80)
 //camera.rotation.set(0, 30, 2)
 //camera.lookAt(new THREE.Vector3(0, 0, 0))
 
@@ -130,8 +130,8 @@ document.body.appendChild(renderer.domElement)
 document.body.appendChild( VRButton.createButton( renderer ) );
 renderer.xr.enabled = true;
 
-// const controls = new OrbitControls(camera, renderer.domElement)
-// controls.enableDamping = true;
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true;
 
 ////////ENTORN/////////////////
 const cubeTextureLoader = new THREE.CubeTextureLoader()
@@ -246,7 +246,7 @@ function handleController( controller ) {
 
 //------------MON-----------------------//
 const world = new CANNON.World()
-world.gravity.set(0, - 9.82, 0)
+world.gravity.set(0, -9.82, 0)
 
 const sphereShape = new CANNON.Sphere(1)
 
@@ -261,23 +261,11 @@ world.addBody(sphereBody)
 const floorShape = new CANNON.Plane()
 const floorBody = new CANNON.Body({
   mass: 0,
-  position: new CANNON.Vec3(0, -1, 0),
+  position: new CANNON.Vec3(0, -4, 0),
   shape: floorShape
 })
+floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI * 0.5)
 world.addBody(floorBody)
-
-const clock = new THREE.Clock()
-let oldElapsedTime = 0
-
-
-
-
-
-
-
-
-
-
 
 const guitar = new THREE.Object3D()
 ImportGLTF("Models/bass_guitar_low_poly_freebie.glb", guitar, new THREE.Vector3(5, 5, 5));
@@ -498,43 +486,46 @@ function ReturnPage(object) {
 
 
 //cridam sa funcio tick q mos renderiza
-tick();
+const clock = new THREE.Clock()
+let oldElapsedTime = 0
+
 
 //Per a cada objecte de s'array mouli sa Y cada x temps
-function tick(time) {
-  time *= 0.001;
-
-
-
-
-  let sceneReady = false
-  const loadingManager = new THREE.LoadingManager(
-    // Loaded
-    () => {
-      // ...
-
-      window.setTimeout(() => {
-        sceneReady = true
-      }, 2000)
-    },
-
-    // ...
-  )
-  handleController( controller1 );
-  handleController( controller2 );
-
-
+function tick() {
   const elapsedTime = clock.getElapsedTime()
   const deltaTime = elapsedTime - oldElapsedTime
   oldElapsedTime = elapsedTime
 
+
+  let sceneReady = false
+  // const loadingManager = new THREE.LoadingManager(
+  //   // Loaded
+  //   () => {
+  //     // ...
+
+  //     window.setTimeout(() => {
+  //       sceneReady = true
+  //     }, 2000)
+  //   },
+
+  //   // ...
+  // )
+  handleController( controller1 );
+  handleController( controller2 );
+
+
+  
+
   // Update physics
   world.step(1 / 60, deltaTime, 3)
-  console.log(sphereBody.position.y)
+  //console.log(sphereBody.position.y)
   sphere.position.copy(sphereBody.position)
   plane.position.copy(floorBody.position)
 
-  floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI * 0.5)
+  //console.log(plane.position)
+  console.log(plane.position)
+
+  
 
   // Update controls
   //controls.update()
@@ -553,6 +544,7 @@ function tick(time) {
   renderer.render(scene, camera)
   renderer.setAnimationLoop(tick);
 }
+tick();
 
 let model = null
 
